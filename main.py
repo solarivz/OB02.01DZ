@@ -42,4 +42,63 @@ class User:
     def get_access_level(self): # метод  возвращает уровень доступа пользователя
         return self.__access_level
 
+# объявление класса Admin, который наследуется от класса User. Администраторы это
+# специальные типы пользователей
+class Admin(User):
+    # метод класса Admin, который вызывает инициализацию родительского класса User
+    # и затем добавляет дополнительные атрибуты и функциональность, специфичные
+    # для администраторов
+    def __init__(self, user_id, name):
+        # вызов super().__init__() используется для вызова метода __init__
+        # родительского класса User, чтобы инициализировать атрибуты, унаследованные
+        # от этого класса
+        super().__init__(user_id, name)
+        # инициализируются дополнительные атрибуты администратора: __access_level
+        # устанавливается как 'admin', указывая на уровень доступа администратора,
+        # и __user_list инициализируется пустым списком для хранения пользователей,
+        # которые могут быть добавлены администратором
+        self.__access_level = 'admin'
+        self.__user_list = []
 
+    def add_user(self, user): #  метод позволяет администратору добавлять новых пользователей в список пользователей
+        self.__user_list.append(user)
+
+    def remove_user(self, user): # метод позволяет администратору удалять пользователей из списка пользователей.
+        self.__user_list.remove(user)
+
+    def get_user_list(self): # метод возвращает список пользователей, добавленных администратором
+        return self.__user_list
+
+# Создаем обычного пользователя
+user1 = User(user_id=1, name="Сергей")
+
+# Выводим информацию о пользователе
+print("User ID:", user1.get_user_id())
+print("Name:", user1.get_name())
+print("Access Level:", user1.get_access_level())  # Должен вывести 'user'
+
+# Создаем администратора
+admin1 = Admin(user_id=2, name="Петр")
+
+# Выводим информацию о администраторе
+print("\nAdmin ID:", admin1.get_user_id())
+print("Name:", admin1.get_name())
+print("Access Level:", admin1.get_access_level())  # Должен вывести 'admin'
+
+# Добавляем пользователя user1 в список пользователей, управляемый администратором admin1
+admin1.add_user(user1)
+
+# Получаем список пользователей, добавленных администратором
+user_list = admin1.get_user_list()
+print("\nUsers added by admin:")
+for user in user_list:
+    print(user.get_name())
+
+# Удаляем пользователя user1 из списка пользователей, управляемого администратором admin1
+admin1.remove_user(user1)
+
+# Проверяем, что пользователь user1 удален из списка пользователей администратора
+user_list = admin1.get_user_list()
+print("\nUsers after removal:")
+if not user_list:
+    print("No users added by admin.")
